@@ -1,0 +1,39 @@
+cmake_minimum_required( VERSION 3.4 )
+project(qwt)
+
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
+
+# Tell CMake to run moc when necessary:
+set(CMAKE_AUTOMOC ON)
+# As moc files are generated in the binary dir, tell CMake
+# to always look for includes there:
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
+add_definitions( -DQWT_DLL -DQWT_MAKEDLL )
+  
+file(GLOB QWT_SOURCE src/*.h src/*.cpp)
+file(GLOB QWT_HDR src/*.h)
+
+add_library(qwt SHARED ${QWT_SOURCE} )
+#target_link_libraries(qwt ${QT_LIBRARIES})
+
+find_package(Qt5Core REQUIRED)
+find_package(Qt5Widgets REQUIRED)
+find_package(Qt5Gui REQUIRED)
+find_package(Qt5Svg REQUIRED)
+find_package(Qt5Core REQUIRED)
+find_package(Qt5OpenGL REQUIRED)
+find_package(Qt5PrintSupport REQUIRED)
+find_package(Qt5Concurrent REQUIRED)
+target_link_libraries(qwt Qt5::Core Qt5::Widgets Qt5::Gui Qt5::Svg Qt5::OpenGL Qt5::PrintSupport Qt5::Concurrent)
+if ( WIN32 )
+  target_link_libraries(qwt Qt5::WinMain)
+endif ( )
+
+install(TARGETS qwt
+  RUNTIME DESTINATION ${CMAKE_INSTALL_PREFIX}/$<CONFIGURATION> COMPONENT libraries
+  LIBRARY DESTINATION ${CMAKE_INSTALL_PREFIX}/$<CONFIGURATION> COMPONENT libraries
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_PREFIX}/$<CONFIGURATION> COMPONENT libraries
+)
+
+install(FILES ${QWT_HDR} DESTINATION ${INCLUDE_INSTALL_DIR}/qwt COMPONENT headers)

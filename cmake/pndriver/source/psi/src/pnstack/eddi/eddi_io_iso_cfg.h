@@ -1,0 +1,161 @@
+/*****************************************************************************/
+/*  Copyright (C) 2019 Siemens Aktiengesellschaft. All rights reserved.      */
+/*****************************************************************************/
+/*  This program is protected by German copyright law and international      */
+/*  treaties. The use of this software including but not limited to its      */
+/*  Source Code is subject to restrictions as agreed in the license          */
+/*  agreement between you and Siemens.                                       */
+/*  Copying or distribution is not allowed unless expressly permitted        */
+/*  according to your license agreement with Siemens.                        */
+/*****************************************************************************/
+/*                                                                           */
+/*  P r o j e c t         &P: PROFINET IO Runtime Software              :P&  */
+/*                                                                           */
+/*  P a c k a g e         &W: PROFINET IO Runtime Software              :W&  */
+/*                                                                           */
+/*  C o m p o n e n t     &C: PSI (PNIO Stack Interface)                :C&  */
+/*                                                                           */
+/*  F i l e               &F: eddi_io_iso_cfg.h                         :F&  */
+/*                                                                           */
+/*  V e r s i o n         &V: BC_PNRUN_P07.01.00.00_00.02.00.15         :V&  */
+/*                                                                           */
+/*  D a t e  (YYYY-MM-DD) &D: 2019-08-05                                :D&  */
+/*                                                                           */
+/*****************************************************************************/
+/*                                                                           */
+/*  D e s c r i p t i o n:                                                   */
+/*                                                                           */
+/*                                         Configfile for isochronous support*/
+/*                                                                           */
+/* ***************************************************************************/
+/*                                                                           */
+/*  H i s t o r y :                                                          */
+/*  ________________________________________________________________________ */
+/*                                                                           */
+/*  Date        Who   What                                                   */
+/*                                                  27.01.09    UL    created*/
+/*                                                                           */
+/*****************************************************************************/
+
+#ifndef EDDI_IO_ISO_CFG_H
+#define EDDI_IO_ISO_CFG_H
+
+/*===========================================================================*/
+/*                              Settings                                     */
+/*===========================================================================*/
+#define EDDI_ISO_CFG_MAX_NR_INSTANCES   1           //Nr. of instances supported
+#define EDDI_ISO_CFG_MAX_CACF           16          //Highest CACF supported
+#define EDDI_ISO_CFG_MAX_RR             512         //Highest ReductionRatio supported
+                                                    //Limit: (8*MAX_CACF*MAX_RR)<65536, because AplClk_Divider/ClkCy-Divider regs have only 16bit!
+
+#define EDDI_ISO_CFG_LITTLE_ENDIAN
+
+#define EDDI_ISO_CFG_TRACE_DEPTH        1024        //depth of internal trace. undef to switch trace off. 
+
+#define EDDI_ISO_CFG_TRACE_INTS                     //if defined, interrupt-events/-handling are also traced
+
+#define EDDI_ISO_CFG_NO_ZE_INT                      //if defined, Ze is checked without using the ze-interrupt (for environments with slow Za-Int-handling)
+
+#define EDDI_ISO_CFG_NO_ZS_INT                      //if defined, Zs is checked without using the zs-interrupt (for environments with slow Za-Int-handling)
+#define EDDI_ISO_CFG_SEPARATE_SFC_TRACKS            //if defined, different sfc enable tracks for input and output will be used
+
+#define EDDI_ISO_CFG_ENABLE_INT_STATISTICS          //enable interrupt-statistics:
+                                                    //- Zm occurence to Tm-Int
+                                                    //- Za occurence to Ta-Int
+
+#define EDDI_ISO_CFG_PASS_INTREG                    //The value of the appropriate IRTE IRT interrupt-request register is passed. Only the interrupt-bits
+                                                    // EDDI_ISO_INT_ZA (currently EDDI_ISO_INT_Clkcy_Int / Bit  13)
+                                                    // EDDI_ISO_INT_ZM (currently EDDI_ISO_INT_Comp1 / Bit  17)
+                                                    // EDDI_ISO_INT_NewCycle (Bit 0)
+                                                    // are evaluated.
+
+
+//#define EDDI_ISO_CFG_TRACE_DEPTH        1024      //depth of internal trace. undef to switch trace off. 
+//#define EDDI_ISO_CFG_TRACE_INTS                   //if defined, interrupt-events/-handling are also traced
+//#define EDDI_ISO_CFG_ALWAYS_MULTI_APPL_CYCL       //if defined, the appldivider is always >1, thus enabling XPLLOUT-generation
+
+/*===========================================================================*/
+/*                              Macros                                       */
+/*===========================================================================*/
+/*****************************************/
+/* Exception                             */
+/*****************************************/
+#if defined (EDD_CFG_NO_FATAL_FILE_INFO)
+  #define EDDI_ISO_Excp(sErr, Error, DW_0, DW_1)                                                                    \
+    /*lint --e(961) */                                                                                              \
+    EDDI_FatalError((LSA_UINT32)__LINE__, (LSA_UINT8 *)(void *)EDD_NULL_PTR, EDDI_MODULE_ID,                        \
+                    (LSA_UINT8 *)(void *)(EDD_NULL_PTR), (LSA_UINT32)(Error), (LSA_UINT32)(DW_0), (LSA_UINT32)(DW_1))
+
+#else
+  #define EDDI_ISO_Excp(sErr, Error, DW_0, DW_1)                                                                    \
+    /*lint --e(961) */                                                                                              \
+    EDDI_FatalError((LSA_UINT32)__LINE__, (LSA_UINT8 *)(void *)__FILE__, EDDI_MODULE_ID,                            \
+                    (LSA_UINT8 *)(void *)(sErr), (LSA_UINT32)(Error), (LSA_UINT32)(DW_0), (LSA_UINT32)(DW_1))
+
+#endif
+
+/*****************************************/
+/* Interupt-handling                     */
+/*****************************************/
+#if defined (EDDI_CFG_APPLSYNC_SHARED)
+//for modifying intcontroller registers, call EDDI-SII functions
+#define EDDI_APPLSYNC_MASK_INTS(pInstance, Value_, Enable_)  EDDI_IsoMaskIntsSII(pInstance, Value_, Enable_);
+
+#define EDDI_APPLSYNC_ACK_INTS(pInstance, Value_)            /* EDDI_IsoAckIntsSII(pInstance, Value_); Attention: avoid ACK of Int_ZA and Int_ZM by IO_ISO AND the application! */
+
+#define EDDI_APPLSYNC_CLEAR_INTS(pInstance, Value_)          EDDI_IsoAckIntsSII(pInstance, Value_);
+
+#elif defined (EDDI_CFG_APPLSYNC_NEWCYCLE_SHARED)
+//for modifying intcontroller registers, call private functions
+/////////////////////////////////////////////////////////
+//Attention: NewCycle-Int is acknowledged by SII!
+/////////////////////////////////////////////////////////
+#define EDDI_APPLSYNC_MASK_INTS(pInstance, Value_, Enable_)  EDDI_IsoMaskInts(pInstance, Value_, Enable_);
+
+#define EDDI_APPLSYNC_ACK_INTS(pInstance, Value_)            /* EDDI_IsoAckInts(pInstance, Value_); Attention: avoid ACK of Int_ZA and Int_ZM by IO_ISO AND the application! */
+
+#define EDDI_APPLSYNC_CLEAR_INTS(pInstance, Value_)          EDDI_IsoAckInts(pInstance, Value_);
+
+#elif defined (EDDI_CFG_APPLSYNC_SEPARATE)
+//for modifying intcontroller registers, call private functions
+/////////////////////////////////////////////////////////
+//Attention: NewCycle-Int has to be acknowledged by user!
+/////////////////////////////////////////////////////////
+#define EDDI_APPLSYNC_MASK_INTS(pInstance, Value_, Enable_)  EDDI_IsoMaskInts(pInstance, Value_, Enable_);
+
+#define EDDI_APPLSYNC_ACK_INTS(pInstance, Value_)            EDDI_IsoAckInts(pInstance, Value_);
+
+#define EDDI_APPLSYNC_CLEAR_INTS(pInstance, Value_)          EDDI_IsoAckInts(pInstance, Value_);
+
+#endif
+
+/*=============================================================================
+ * function name:  EDDI_ENTER_APPLSYNC()
+ *
+ * function:       set reentrance lock
+ *
+ * parameters:     LSA_VOID
+ *
+ * return value:   LSA_VOID
+ *===========================================================================*/
+LSA_VOID  EDDI_SYSTEM_OUT_FCT_ATTR  EDDI_ENTER_APPLSYNC( LSA_VOID );
+
+
+/*=============================================================================
+ * function name:  EDDI_EXIT_APPLSYNC()
+ *
+ * function:       cancel reentrance lock
+ *
+ * parameters:     LSA_VOID
+ *
+ * return value:   LSA_VOID
+ *===========================================================================*/
+LSA_VOID  EDDI_SYSTEM_OUT_FCT_ATTR  EDDI_EXIT_APPLSYNC( LSA_VOID );
+
+#endif //EDDI_IO_ISO_CFG_H
+
+
+/*****************************************************************************/
+/*  end of file eddi_io_iso_cfg.txt/h                                        */
+/*****************************************************************************/
+

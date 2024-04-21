@@ -1,0 +1,80 @@
+SHAREDOBJ_TARGET_x32    = PnDev_DriverU32.so
+SHAREDOBJ_TARGET_x64    = PnDev_DriverU64.so
+SHAREDOBJ_TARGET_BASE = PnDev_Driver
+
+SOURCE	   		= src/PnDev_DriverU.dll
+SOURCE_COMMON	= $(SOURCE)/../../common
+OBJDIR 			= ./sharedobj_build
+OBJDIRx32 			= $(OBJDIR)/x32
+OBJDIRx64 			= $(OBJDIR)/x64
+
+OBJS_SharedObject = \
+	$(SOURCE)/PnDev_Service.cpp \
+	$(SOURCE)/pndevdrv_ver.c \
+	$(SOURCE)/clsDataSet.cpp \
+	$(SOURCE)/os_clsDataSet.cpp \
+	$(SOURCE)/os_Main.cpp \
+	$(SOURCE)/clsString.cpp \
+	$(SOURCE)/clsUsedDevice.cpp \
+	$(SOURCE)/clsUsedTimer.cpp \
+	$(SOURCE)/os_clsUsedTimer.cpp \
+	$(SOURCE)/os_clsUsedDevice.cpp \
+	$(SOURCE)/os_clsFile.cpp \
+	$(SOURCE)/clsDmm.cpp \
+	$(SOURCE)/../PnDev_Driver.sys/Basic.c \
+	$(SOURCE_COMMON)/os_Env.c \
+	$(SOURCE_COMMON)/PnDev_Util.c
+
+	
+INCD = \
+	-I../../$(SOURCE)/ \
+	-I../../$(SOURCE_COMMON)/
+
+
+DEFD = \
+	-DPNDEV_TEST_INTERNAL \
+	   -DPNDEV_OS_LINUX \
+	   -DPNDEV_SUPPORT_I210 \
+	   -DPNDEV_SUPPORT_I210SFP \
+	   -DPNDEV_SUPPORT_I82574 \
+	   -DPNDEV_SUPPORT_IX1000 \
+	   -DPNDEV_SUPPORT_OTHERS \
+	   -D_GNU_SOURCE
+
+
+all : $(SHAREDOBJ_TARGET_x32) $(SHAREDOBJ_TARGET_x64)
+	@echo ALL done for 'shared object'
+
+clean :
+	rm -f $(SHAREDOBJ_TARGET_x32) $(SHAREDOBJ_TARGET_x64)
+	rm -r $(OBJDIR)
+	@echo Clean All done
+	
+$(SHAREDOBJ_TARGET_x32) : CCFLAGS = -m32 -MMD -fPIC -Wall -Wextra -Wpacked
+$(SHAREDOBJ_TARGET_x32) : $(addprefix $(OBJDIRx32)/,$(addsuffix .o,$(basename $(OBJS_SharedObject))))
+	$(CXX) $(DEFD) $(CCFLAGS) -shared -o $@ -lrt $^
+	@echo Building $@ done
+	
+$(SHAREDOBJ_TARGET_x64) : CCFLAGS = -MMD -fPIC -Wall -Wextra -Wpacked
+$(SHAREDOBJ_TARGET_x64) : $(addprefix $(OBJDIRx64)/,$(addsuffix .o,$(basename $(OBJS_SharedObject))))
+	$(CXX) $(DEFD) $(CCFLAGS) -shared -o $@ -lrt $^
+	@echo Building $@ done
+
+-include $(addprefix $(OBJDIRx32)/,$(addsuffix .d,$(basename $(OBJS_SharedObject))))
+-include $(addprefix $(OBJDIRx64)/,$(addsuffix .d,$(basename $(OBJS_SharedObject))))
+
+$(OBJDIRx32)/%.o : ../../%.cpp
+	@mkdir -p $(@D)
+	$(CXX) $(DEFD) $(CCFLAGS) $(INCD) -fpermissive -g -o $@ -c $<
+
+$(OBJDIRx32)/%.o : ../../%.c
+	@mkdir -p $(@D)
+	$(CC) $(DEFD) $(CCFLAGS) $(INCD) -g -o $@ -c $<
+
+$(OBJDIRx64)/%.o : ../../%.cpp
+	@mkdir -p $(@D)
+	$(CXX) $(DEFD) $(CCFLAGS) $(INCD) -fpermissive -g -o $@ -c $<
+
+$(OBJDIRx64)/%.o : ../../%.c
+	@mkdir -p $(@D)
+	$(CC) $(DEFD) $(CCFLAGS) $(INCD) -g -o $@ -c $<

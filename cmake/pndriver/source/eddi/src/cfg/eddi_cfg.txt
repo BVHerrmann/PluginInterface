@@ -1,0 +1,461 @@
+#ifndef EDDI_CFG_H              //reinclude-protection
+#define EDDI_CFG_H
+
+#ifdef __cplusplus              //If C++ - compiler: Use C linkage
+extern "C"
+{
+#endif
+
+/*****************************************************************************/
+/*  Copyright (C) 2019 Siemens Aktiengesellschaft. All rights reserved.      */
+/*****************************************************************************/
+/*  This program is protected by German copyright law and international      */
+/*  treaties. The use of this software including but not limited to its      */
+/*  Source Code is subject to restrictions as agreed in the license          */
+/*  agreement between you and Siemens.                                       */
+/*  Copying or distribution is not allowed unless expressly permitted        */
+/*  according to your license agreement with Siemens.                        */
+/*****************************************************************************/
+/*                                                                           */
+/*  P r o j e c t         &P: PROFINET IO Runtime Software              :P&  */
+/*                                                                           */
+/*  P a c k a g e         &W: PROFINET IO Runtime Software              :W&  */
+/*                                                                           */
+/*  C o m p o n e n t     &C: EDDI (EthernetDeviceDriver for IRTE)      :C&  */
+/*                                                                           */
+/*  F i l e               &F: eddi_cfg.h/txt                            :F&  */
+/*                                                                           */
+/*  V e r s i o n         &V: BC_PNRUN_P07.01.00.00_00.02.00.15         :V&  */
+/*                                                                           */
+/*  D a t e  (YYYY-MM-DD) &D: 2019-08-05                                :D&  */
+/*                                                                           */
+/*****************************************************************************/
+/*                                                                           */
+/*  D e s c r i p t i o n:                                                   */
+/*                                                                           */
+/*  Configuration for EDDI:                                                  */
+/*  Defines constants, types and macros for eddi.                            */
+/*                                                                           */
+/*  This file has to be overwritten during system integration, because       */
+/*  some definitions depend on the different system, compiler or             */
+/*  operating system.                                                        */
+/*                                                                           */
+/*****************************************************************************/
+/*                                                                           */
+/*  H i s t o r y :                                                          */
+/*  ________________________________________________________________________ */
+/*                                                                           */
+/*  Date        Who   What                                                   */
+/*                                                                           */
+/*****************************************************************************/
+
+/*---------------------------------------------------------------------------*/
+/* If LSA_RESULT is not defined by LSA, we define it here.                   */
+/*---------------------------------------------------------------------------*/
+
+/* Note: LSA_RESULT has to be the same type as "response" within             */
+/*       LSA-RQB-Header. This is currently LSA_UINT16!                       */
+
+#ifndef LSA_RESULT
+#define LSA_RESULT              LSA_UINT16
+#endif
+
+#if defined (TOOL_CHAIN_MS_WINDOWS)
+
+#pragma warning( disable : 4214 )  //Nicht dem Standard entsprechende Erweiterung
+#pragma warning( disable : 4505 )
+
+#endif
+
+//#define EDDI_CFG_MIRROR_MODE_INCLUDE
+
+/*---------------------------------------------------------------------------*/
+/* Include xRT over UDP-Support (cylcic/acyclic).                            */
+/* If not defined, all xRT over UDP-Frames will be handled like standard IP  */
+/* frames.                                                                   */
+/*---------------------------------------------------------------------------*/
+
+//#define EDDI_CFG_XRT_OVER_UDP_INCLUDE  not implemented yet - do not use!!
+
+// allowed: 1..16
+#define EDDI_CFG_MAX_DEVICES  4UL
+
+/*---------------------------------------------------------------------------*/
+/* maximum number of communication channels supported                        */
+/*---------------------------------------------------------------------------*/
+
+// allowed: 1..max nr supported by LSA_HANDLE_TYPE
+#define EDDI_CFG_MAX_CHANNELS  20UL
+
+/*---------------------------------------------------------------------------*/
+/* Max number of providers per interface supported.                          */
+/* (1..0x7FFF)                                                               */
+/*---------------------------------------------------------------------------*/
+
+#define EDDI_CFG_MAX_NR_PROVIDERS 	1024
+
+/*---------------------------------------------------------------------------*/
+/* OPTIONAL: disable checking of overlaps in KRAM                            */
+/*---------------------------------------------------------------------------*/
+//#define EDDI_CFG_DISABLE_KRAM_OVERLAP_CHECK
+
+/*===========================================================================*/
+/* Compiler/HW-dependend optimization settings                               */
+/*===========================================================================*/
+
+/*---------------------------------------------------------------------------*/
+/* For functions called from scratch-pad code but located outside (and vice  */
+/* versa) we need an _far attribute with the tasking-Compiler in order to get*/
+/* the correct call - opcode (if not the code will be out of range when      */
+/* linked!)                                                                  */
+/*---------------------------------------------------------------------------*/
+
+#define EDDI_FAR_FCT
+
+#define EDDI_SYS_HANDLE           LSA_UINT32
+
+/*---------------------------------------------------------------------------*/
+/* if EDDI_INLINE is defined, several functions including bitfield mani-     */
+/* pulations, are inlined, resulting in higher speed but more code           */
+/*---------------------------------------------------------------------------*/
+//#define EDDI_INLINE           __forceinline	                    //Microsoft Visual C 2008. Take care for optimization parameter "Inline default/ /Ob1 /Ob2"
+//#define EDDI_INLINE           inline			                    //GCC CPU15xx
+//#define EDDI_INLINE           static inline	                    //TOOL_CHAIN_GNU_PPC, CP4431
+//#define EDDI_INLINE_SUFFIX	__attribute__ ((always_inline))     //GCC CPU15xx only! leave undefined otherwise!
+#define EDDI_INLINE             __inline                            //do not use __forceinline here, as LINT does not know this keyword
+
+/*===========================================================================*/
+/*                              basic attributes                             */
+/*===========================================================================*/
+/*lint -e950     Note 950: Non-ANSI reserved word or construct: '__fastcall' */
+
+/*===========================================================================*/
+/*                         code- and data-attributes                         */
+/*===========================================================================*/
+
+/*=====  code attributes  =====*/
+
+#define EDDI_SYSTEM_IN_FCT_ATTR   EDD_ATTR_FAR   /* system to prefix */
+#define EDDI_SYSTEM_OUT_FCT_ATTR  EDD_ATTR_FAR   /* prefix to system */
+#define EDDI_LOCAL_FCT_ATTR       EDD_ATTR_NEAR  /* local function */
+
+/*=====  data attributes  =====*/
+
+#define EDDI_LOWER_MEM_ATTR       EDD_ATTR_HUGE  /* lower-memory data */
+#define EDDI_SYSTEM_MEM_ATTR      EDD_ATTR_HUGE  /* system-memory data */
+#define EDDI_LOCAL_MEM_ATTR       EDD_ATTR_SHUGE /* local data */
+
+/*---------------------------------------------------------------------------*/
+/* Definition of RQB-HEADER:                                                 */
+/*                                                                           */
+/* The order of the parameters can be changed!                               */
+/* The length of the RQB-HEADER must be 2/4-byte-aligned according to the    */
+/* system!                                                                   */
+/* If necessary, dummy-bytes must be added!                                  */
+/* If necessary during system integration, additional parameters can be added*/
+/*                                                                           */
+/* For example:                                                              */
+/*   LSA_COMP_ID_TYPE                comp_id;    for lsa-component-id        */
+/*                                                                           */
+/* If LSA_RQB_HEADER is defined, we use the LSA header definition.           */
+/*                                                                           */
+/* Note: LSA_RQB_HEADER currently not defined within standard LSA headers    */
+/*       This is a option to simplify integration if used, because typically */
+/*       all RQB-headers within a system have the same format.               */
+/*---------------------------------------------------------------------------*/
+
+/*===========================================================================*/
+/*                                 macros                                    */
+/*===========================================================================*/
+
+/*==== set and get parameter of the rqb-header ===*/
+#define EDDI_RQB_SET_COMPID(_pRQB, _Value)         ( (_pRQB)->comp_id = (_Value) )
+#define EDDI_RQB_GET_COMPID(_pRQB)                 ( (_pRQB)->comp_id )
+
+/* The following features have to be controllable by makefiles */
+#if defined (EDDI_CFG_SET_ENDIAN_EXTERN)
+/* EDDI_CFG_xxxxx_ENDIAN has to be set by the makefile! */
+#else
+#define EDDI_CFG_LITTLE_ENDIAN /* PC */
+//#define EDDI_CFG_BIG_ENDIAN /* MIPS */
+#endif
+
+#undef EDDI_CFG_BIG_ENDIAN
+
+#if defined (EDDI_CFG_SET_IO_ENDIAN_EXTERN)
+/* EDDI_CFG_IO_xxxxx_ENDIAN has to be set by the makefile! */
+#else
+#define EDDI_CFG_IO_LITTLE_ENDIAN /* PC */
+//#define EDDI_CFG_IO_BIG_ENDIAN /* MIPS */
+#endif
+
+#undef EDDI_CFG_IO_BIG_ENDIAN
+/* End of the features, that have to be controllable by makefiles */
+
+/*---------------------------------------------------------------------------*/
+/* Definition of ERTEC200/400/SOC - Additions                                */
+/*---------------------------------------------------------------------------*/
+
+/* The following features have to be controllable by makefiles */
+#if defined (EDDI_CFG_SET_ERTEC_VERSION_EXTERN)
+/* EDDI_CFG_ERTEC_400, EDDI_CFG_ERTEC_200 or EDDI_CFG_SOC has to be set by the makefile! */
+#else
+//#define EDDI_CFG_ERTEC_400
+//#define EDDI_CFG_ERTEC_200
+//#define EDDI_CFG_SOC
+#endif
+/* End of the features, that have to be controllable by makefiles */
+
+/* Hardware variants */
+#if defined (EDDI_CFG_ERTEC_400)
+
+#define EDDI_CFG_REV5
+
+//SW-Fix for HW bug in the TimerScoreBoard of ERTEC400
+#define EDDI_CFG_USE_SW_RPS
+
+//SW-Fix for IRTE-IP bug (limiting the length)
+#define EDDI_CFG_MAX_IR_DATA_LENGTH  210UL
+
+//#define EDDI_CFG_XRT_OVER_UDP_INCLUDE
+
+#define EDDI_CFG_PHY_TRANSCEIVER_BROADCOM       /* BROADCOM (BCM5221) Transceiver (PHY) */
+#define EDDI_CFG_PHY_TRANSCEIVER_NEC            /* NEC (AATHPHYC2) Transceiver (PHY)    */
+#define EDDI_CFG_PHY_TRANSCEIVER_NSC            /* NSC (DP83849I) Transceiver (PHY)     */
+#define EDDI_CFG_PHY_TRANSCEIVER_TI             /* TI (TLK111) Transceiver (PHY)        */
+
+//#define EDDI_CFG_CNS400_SPEED_OPT_ON          /* OPTIONAL: Omit checks in consistency buffer interface.              */
+                                                /*           Functions for ERTEC400 results in higher execution speed. */
+
+#elif defined (EDDI_CFG_ERTEC_200)
+
+#define EDDI_CFG_REV6
+
+//SW-Fix for IRTE-IP bug concerning IRT
+#define EDDI_CFG_MAX_IR_DATA_LENGTH  280UL
+
+//#define EDDI_CFG_XRT_OVER_UDP_INCLUDE
+
+//Activate 3-buffer-IF in SW for providers
+#define EDDI_CFG_USE_SW_IIIB_IF_PROV
+
+#define EDDI_CFG_PHY_TRANSCEIVER_BROADCOM       /* BROADCOM (BCM5221) Transceiver (PHY) */
+#define EDDI_CFG_PHY_TRANSCEIVER_NEC            /* NEC (AATHPHYC2) Transceiver (PHY)    */
+#define EDDI_CFG_PHY_TRANSCEIVER_NSC            /* NSC (DP83849I) Transceiver (PHY)     */
+#define EDDI_CFG_PHY_TRANSCEIVER_TI             /* TI (TLK111) Transceiver (PHY)        */
+
+//Enable 3B-IF in SW for providers for 2proc machines, disable system redundancy support
+//#define EDDI_CFG_3BIF_2PROC                   
+
+#elif defined (EDDI_CFG_SOC)
+
+#define EDDI_CFG_REV7
+
+#define EDDI_CFG_PHY_TRANSCEIVER_BROADCOM       /* BROADCOM (BCM5221) Transceiver (PHY) */
+#define EDDI_CFG_PHY_TRANSCEIVER_NEC            /* NEC (AATHPHYC2) Transceiver (PHY)    */
+#define EDDI_CFG_PHY_TRANSCEIVER_NSC            /* NSC (DP83849I) Transceiver (PHY)     */
+#define EDDI_CFG_PHY_TRANSCEIVER_TI             /* TI (TLK111) Transceiver (PHY)        */
+
+//#define EDDI_CFG_XRT_OVER_UDP_INCLUDE
+
+#else
+#error "neither EDDI_CFG_ERTEC_400 nor EDDI_CFG_ERTEC_200 nor EDDI_CFG_SOC defined in eddi_cfg.h!"
+#endif
+
+/*===========================================================================*/
+/*========================= IRT-INTERFACE ===================================*/
+/*===========================================================================*/
+#define EDDI_IRT_DATALEN_MAX_REV5_DEBUG_0   210
+#define EDDI_IRT_DATALEN_MAX_REV6_DEBUG_0   280
+
+#define EDDI_CFG_LEAVE_IRTCTRL_UNCHANGED    //resetting of IRTCtrl when resetting the switch-module depends
+                                            //on parameter bResetIRTCtrl in dsb.SWIPara
+
+//#define EDDI_PRM_CFG_ALLOW_REDSHIFT       //if set, a parametrization with RedPeriodBegin-Values != 0 is allowed, otherwise rejected (ERR_PARAM)
+
+/*===========================================================================*/
+/*============================ LSA-TRACE ====================================*/
+/*===========================================================================*/
+//#define EDDI_CFG_TRACE_MODE               0       //no Trace
+//#define EDDI_CFG_TRACE_MODE               1       //LSA-Trace
+#define EDDI_CFG_TRACE_MODE                 2       //LSA-IDX-Trace
+
+//LSA-Trace
+#define TRACE_SUBSYS_EDDI_UPPER             eddi
+#define TRACE_SUBSYS_EDDI_LOWER             eddi
+#define TRACE_SUBSYS_EDDI_SYSTEM            eddi
+#define TRACE_SUBSYS_EDDI_FUNCTION          eddi
+#define TRACE_SUBSYS_EDDI_NRT               eddi
+#define TRACE_SUBSYS_EDDI_PRM               eddi
+#define TRACE_SUBSYS_EDDI_SWI               eddi
+#define TRACE_SUBSYS_EDDI_CRT               eddi
+#define TRACE_SUBSYS_EDDI_SYNC              eddi
+#define TRACE_SUBSYS_EDDI_PROGRAM           eddi
+
+//LSA-IDX-Trace
+#define TRACE_SUBSYS_EDDI_UPPER_IDX00       eddi
+#define TRACE_SUBSYS_EDDI_LOWER_IDX00       eddi
+#define TRACE_SUBSYS_EDDI_SYSTEM_IDX00      eddi
+#define TRACE_SUBSYS_EDDI_FUNCTION_IDX00    eddi
+#define TRACE_SUBSYS_EDDI_NRT_IDX00         eddi
+#define TRACE_SUBSYS_EDDI_PRM_IDX00         eddi
+#define TRACE_SUBSYS_EDDI_SWI_IDX00         eddi
+#define TRACE_SUBSYS_EDDI_CRT_IDX00         eddi
+#define TRACE_SUBSYS_EDDI_SYNC_IDX00        eddi
+#define TRACE_SUBSYS_EDDI_PROGRAM_IDX00     eddi
+
+#define eddi_log_get_fct                    "eddi"  //see LTRC_TRACE_01
+
+extern int eddi_log_level;                          //see LTRC_LEVEL_TYPE
+
+/*---------------------------------------------------------------------------*/
+
+//#define EDDI_CFG_CONSTRACE_DEPTH      64  //Depth of consumer-trace. If not defined trace is not active.
+
+/*---------------------------------------------------------------------------*/
+
+#if defined (EDDI_CFG_ERTEC_400)
+//#define EDDI_CFG_NRT_TS_TRACE_DEPTH    16 //Depth of nrt-timestamp-trace. If not defined trace is not active. Only allowed with EDDI_CFG_ERTEC_400!
+#endif
+
+/*---------------------------------------------------------------------------*/
+/* SII (Standard Interrupt Integration)                                      */
+/*---------------------------------------------------------------------------*/
+//#define EDDI_CFG_SII_POLLING_MODE
+//#define EDDI_CFG_SII_FLEX_MODE
+//#define EDDI_CFG_SII_NEW_CYCLE_SYNC_MODE
+//#define EDDI_CFG_SII_ADD_PRIO1_AUX
+//#define EDDI_CFG_SII_NRT_RX_CHA0_LIMITATION   m   //m=0...20
+//#define EDDI_CFG_SII_NRT_RX_CHB0_LIMITATION   n   //n=0...20
+//#define EDDI_CFG_SII_NRT_TX_RELOAD_REDUCTION
+
+//#define EDDI_CFG_SII_INT_RESTART_MODE_LOOP
+//#define EDDI_CFG_SII_NO_PNDEVDRV_SUPPORT
+//#define EDDI_CFG_SII_USE_SPECIAL_EOI                      x   //x = 0...max
+//#define EDDI_CFG_SII_REMOVE_ISR_LOCKS
+
+#if !defined (EDDI_CFG_SII_FLEX_MODE) && !defined (EDDI_CFG_SII_NEW_CYCLE_SYNC_MODE)
+//#define EDDI_CFG_SII_EXTTIMER_MODE_ON                         //=> DPB parameter SII_ExtTimerInterval =      250 or 500 or 1000 us
+//#define EDDI_CFG_SII_EXTTIMER_MODE_FLEX                       //=> DPB parameter SII_ExtTimerInterval = 0 or 250 or 500 or 1000 us
+#endif
+
+
+//select SII features for polling mode
+#if defined (SYS_CP_SII_POLLING_MODE)
+//    #define EDDI_CFG_SII_POLLING_MODE
+//    #define EDDI_CFG_SII_ADD_PRIO1_AUX
+///
+//    #if defined (EDDI_CFG_SOC)
+//    #define EDDI_CFG_SII_EXTTIMER_MODE_ON               //=> DPB parameter SII_ExtTimerInterval = 250 or 500 or 1000 us
+//    #define SYS_CP_SII_EXTTIMER_INTERVAL_US     1000UL  //1ms interval for external timer
+//    #define EDDI_CFG_SYSRED_2PROC                       //support multiprocessor for SystemRedundancy
+#endif
+
+#if defined (EDDI_CFG_SII_NEW_CYCLE_SYNC_MODE)
+//#define EDDI_CFG_SII_NEW_CYCLE_SYNC_MODE_NRT_CHECK_US     x   //x = 250 or 500 or 1000 us
+#endif
+
+/*---------------------------------------------------------------------------*/
+
+//optional for EDDI system integration
+//#define EDDI_CFG_DO_EV_TIMER_REST
+
+/*---------------------------------------------------------------------------*/
+
+//#define EDDI_CFG_REV5_IF_IDX_EXCLUDED_FROM_ARP_FILTER  EDDI_NRT_CHB_IF_0  //ARPs received on this interface are sent directly to it, regardless of a set ARP-filter
+                                                                            //can be one of: EDDI_NRT_CHA_IF_0, EDDI_NRT_CHB_IF_0
+
+/*===========================================================================*/
+/* macro name:    EDDI_FILE_SYSTEM_EXTENSION(module_id_)                     */
+/*                                                                           */
+/* macro:         System integrators can use the macro to smuggle something  */
+/*                into the component source files. By default it's empty.    */
+/*                                                                           */
+/*                The system integrators are responsible for the contents of */
+/*                that macro.                                                */
+/*                                                                           */
+/*                Internal data of LSA components may not be changed!        */
+/*                                                                           */
+/* parameter:     Module-id                                                  */
+/*                                                                           */
+/*                There's no prototype for that macro!                       */
+/*===========================================================================*/
+
+#define EDDI_FILE_SYSTEM_EXTENSION(module_id_)
+
+//Do not use these switches until you have problems with the EDDI code size
+//#define EDDI_CFG_NO_FATAL_FILE_INFO
+//#define EDDI_CFG_NO_DETAIL_ERROR_LINE_INFO
+
+/*---------------------------------------------------------------------------*/
+/* EDDI_CFG_PHY_TRANSCEIVER_XXX                                              */
+/*---------------------------------------------------------------------------*/
+/* Select one or more PHY transceivers that are compiled with the EDDI.      */
+
+//#define EDDI_CFG_PHY_TRANSCEIVER_BROADCOM       /* BROADCOM (BCM5221) Transceiver (PHY) */
+//#define EDDI_CFG_PHY_TRANSCEIVER_NEC            /* NEC (AATHPHYC2) Transceiver (PHY)    */
+//#define EDDI_CFG_PHY_TRANSCEIVER_NSC            /* NSC (DP83849I) Transceiver (PHY)     */
+//#define EDDI_CFG_PHY_TRANSCEIVER_TI             /* TI (TLK111) Transceiver (PHY)        */
+//#define EDDI_CFG_PHY_TRANSCEIVER_USERSPEC       /* User specific Transceiver (PHY)      */
+//#define EDDI_CFG_PHY_VARIABLE_PORTSWAPPING_NSC  /* support Port Swapping for NSC Transceiver-PHY*/
+
+#if defined (EDDI_CFG_PHY_TRANSCEIVER_USERSPEC)
+/* If you select a user specific PHY transceiver, you must also set the      */
+/* corresponding 22bit OUI (Organizationally Unique Identifier) of that PHY  */
+/* according to IEEE.                                                        */
+//#define EDDI_CFG_PHY_REGVALUE_OUI_USERSPEC    0x000000
+#endif
+
+/* Select User blink functions instead of EDDI blink functions.              */
+#if defined (EDDI_CFG_PHY_TRANSCEIVER_BROADCOM)
+//#define EDDI_CFG_PHY_BLINK_EXTERNAL_BROADCOM
+#endif
+#if defined (EDDI_CFG_PHY_TRANSCEIVER_NEC)
+//#define EDDI_CFG_PHY_BLINK_EXTERNAL_NEC
+#endif
+#if defined (EDDI_CFG_PHY_TRANSCEIVER_NSC)
+//#define EDDI_CFG_PHY_BLINK_EXTERNAL_NSC
+#endif
+#if defined (EDDI_CFG_PHY_TRANSCEIVER_TI)
+//#define EDDI_CFG_PHY_BLINK_EXTERNAL_TI
+#endif
+#if defined (EDDI_CFG_PHY_TRANSCEIVER_USERSPEC)
+//#define EDDI_CFG_PHY_BLINK_EXTERNAL_USERSPEC
+#endif
+
+/*---------------------------------------------------------------------------*/
+/* EDDI_CFG_APPLSYNC_XXX                                                     */
+/*---------------------------------------------------------------------------*/
+/* Enable isochronous support (application synchronisation) and select if    */
+/* it shares it´s resources with EDDI or if it runs on a separate processor. */
+
+#define EDDI_CFG_APPLSYNC_SHARED
+//#define EDDI_CFG_APPLSYNC_NEWCYCLE_SHARED
+//#define EDDI_CFG_APPLSYNC_SEPARATE
+
+/*---------------------------------------------------------------------------*/
+/* EDDI_CFG_NO_ENHANCED_CRS_DV                                               */
+/*---------------------------------------------------------------------------*/
+/* Disables the Enhanced CRS_DV mode for NSC or TI PHY when using RMII.      */
+/* By default this feature is enabled.                                       */
+
+//#define EDDI_CFG_NO_ENHANCED_CRS_DV
+
+/*---------------------------------------------------------------------------*/
+/* EDDI_CFG_ENABLE_NRT_AUTOALIGNMENT                                         */
+/*---------------------------------------------------------------------------*/
+/* Enable automatic filling of up to 3 bytes with 0 .                        */
+/* !!!Attention!!! do not switch on, as data corruptions due to              */
+/* disadvantageous buffer handling in TCP/IP can occur!                      */
+//#define EDDI_CFG_ENABLE_NRT_AUTOALIGNMENT
+
+#ifdef __cplusplus //If C++ - compiler: End of C linkage
+}
+#endif
+
+#endif //EDDI_CFG_H
+
+
+/*****************************************************************************/
+/*  end of file eddi_cfg.h/txt                                               */
+/*****************************************************************************/

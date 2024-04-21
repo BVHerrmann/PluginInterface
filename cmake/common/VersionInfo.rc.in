@@ -1,0 +1,26 @@
+#include <winver.h>
+
+VS_VERSION_INFO VERSIONINFO
+FILEVERSION    	@PROJECT_VERSION_MAJOR@,@PROJECT_VERSION_MINOR@,@PROJECT_VERSION_PATCH@
+PRODUCTVERSION 	@PROJECT_VERSION_MAJOR@,@PROJECT_VERSION_MINOR@,@PROJECT_VERSION_PATCH@
+FILEOS         	VOS__WINDOWS32
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "000004b0"
+        BEGIN
+            VALUE "CompanyName",      "@PROJECT_VENDOR@\0"
+            VALUE "FileDescription",  "@_VER_DESCRIPTION@\0"
+            VALUE "FileVersion",      "@PROJECT_VERSION@\0"
+            VALUE "InternalName",     "@GIT_HASH@\0"
+            VALUE "LegalCopyright",   "© @PROJECT_COPYRIGHT@\0"
+            VALUE "OriginalFilename", "@_VER_FILENAME@\0"
+            VALUE "ProductName",      "@PROJECT_NAME@\0"
+            VALUE "ProductVersion",   "@PROJECT_VERSION@\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+		VALUE "Translation", 0x000, 1200
+    END
+END

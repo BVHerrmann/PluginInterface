@@ -1,0 +1,187 @@
+#ifndef EDDI_INC_H              //reinclude-protection
+#define EDDI_INC_H
+
+#ifdef __cplusplus              //If C++ - compiler: Use C linkage
+extern "C"
+{
+#endif
+
+/*****************************************************************************/
+/*  Copyright (C) 2019 Siemens Aktiengesellschaft. All rights reserved.      */
+/*****************************************************************************/
+/*  This program is protected by German copyright law and international      */
+/*  treaties. The use of this software including but not limited to its      */
+/*  Source Code is subject to restrictions as agreed in the license          */
+/*  agreement between you and Siemens.                                       */
+/*  Copying or distribution is not allowed unless expressly permitted        */
+/*  according to your license agreement with Siemens.                        */
+/*****************************************************************************/
+/*                                                                           */
+/*  P r o j e c t         &P: PROFINET IO Runtime Software              :P&  */
+/*                                                                           */
+/*  P a c k a g e         &W: PROFINET IO Runtime Software              :W&  */
+/*                                                                           */
+/*  C o m p o n e n t     &C: EDDI (EthernetDeviceDriver for IRTE)      :C&  */
+/*                                                                           */
+/*  F i l e               &F: eddi_inc.txt                              :F&  */
+/*                                                                           */
+/*  V e r s i o n         &V: BC_PNRUN_P07.01.00.00_00.02.00.15         :V&  */
+/*                                                                           */
+/*  D a t e  (YYYY-MM-DD) &D: 2019-08-05                                :D&  */
+/*                                                                           */
+/*****************************************************************************/
+/*                                                                           */
+/*  D e s c r i p t i o n:                                                   */
+/*                                                                           */
+/*  Include-File:                                                            */
+/*  Includes of Edd and of the different systems, compilers or               */
+/*  operating system.                                                        */
+/*                                                                           */
+/*  This file has to be overwritten during system integration, because       */
+/*  some includes depend on the different system, compiler or                */
+/*  operating system.                                                        */
+/*                                                                           */
+/*****************************************************************************/
+/*                                                                           */
+/*  H i s t o r y :                                                          */
+/*  ________________________________________________________________________ */
+/*                                                                           */
+/*  Date        Who   What                                                   */
+/*  12.04.02    JS    initial version. LSA P02.00.01.003                     */
+/*  23.05.02    JS    ported to LSA_GLOB_P02.00.00.00_00.01.04.01            */
+/*                                                                           */
+/*****************************************************************************/
+
+/* include your global system headers here ----------------------------------*/
+
+/* the following LSA-headers or headers including these headers have to      */
+/* be included here.                                                         */
+//#include <stdlib.h>
+//#include <memory.h>
+
+#include "lsa_cfg.h"
+#include "lsa_usr.h"
+#include "lsa_sys.h"
+
+/*---------------------------------------------------------------------------*/
+
+#include "edd_cfg.h"
+#include "eddi_cfg.h"
+//lint -save -e762  -e962 -e760  Redundantly declared symbol, Macro
+#include "edd_usr.h"
+#include "eddi_usr.h"
+//lint -restore
+
+#if defined (EDDI_CFG_TRACE_MODE) && ((EDDI_CFG_TRACE_MODE == 1) || (EDDI_CFG_TRACE_MODE == 2)) //LSA-Trace
+
+#include "sys_inc.h"
+#include "ltrc_if.h" //only if LTRC is used for trace
+
+#endif
+
+#include "eddi_sys.h"
+#include "eddi_irte.h"
+#include "eddi_trc.h"
+
+/*-include your output-macro-header here ------------------------------------*/
+
+//lint -save -e762  -e962 -e760  Redundantly declared symbol, Macro
+#include "sys_out.h"
+
+#include "eddi_out.h"
+//lint -restore
+
+#include "eddi_pls.h"
+
+#include "eddi_err.h"
+
+/*---------------------------------------------------------------------------*/
+
+//lint -esym(755, SYS_PATH*)
+
+/*---------------------------------------------------------------------------*/
+/* for EDDI_GET_PATH_INFO, variable path                                     */
+/*---------------------------------------------------------------------------*/
+#define SYS_PATH_GET_CP_NR(sys_path)        (sys_path >> 12)
+#define SYS_PATH_SET_CP_NR(sys_path, cp_nr) ((LSA_UINT16)((cp_nr << 12) | sys_path))
+
+//Switch
+#define SYS_PATH_SWI_0								0x0000
+#define SYS_PATH_SWI_1								0x0001
+#define SYS_PATH_SWI_2								0x0002
+#define SYS_PATH_SWI_3								0x0003
+
+//CRT
+#define SYS_PATH_CRT								0x0004
+
+//NRT-Interface
+#define SYS_PATH_NRT_CHA_IF_0						0x0005	//receive all frames
+#define SYS_PATH_NRT_CHB_IF_0						0x0006	//receive all frames
+
+//regular NRT-channels for CHA0
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_NULL			0x0010
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_IP_ICMP			0x0011
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_IP_IGMP			0x0012
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_IP_TCP			0x0013
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_IP_UDP			0x0014
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_IP_VRRP			0x0015
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_IP_OTHER		0x0016
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_ARP				0x0017
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_RARP			0x0018
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_DCP				0x0019
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_DCP_HELLO		0x001A
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_UDP_DCP			0x001B
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_UDP_DCP_HELLO	0x001C
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_UDP_ASRT		0x001D
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_ASRT			0x001E
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_PTCP_ANNO		0x001F
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_LEN_DCP			0x0020
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_LEN_TSYNC		0x0021
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_LEN_OTHER		0x0022
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_LEN_SINEC_FWL	0x0023
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_OTHER			0x0024
+
+//additional NRT-channels for CHA0
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_LEN_STDBY		0x0030 //for negative test!
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_KOMBI			0x0031
+#define SYS_PATH_NRT_CHA_IF_0_FRAME_IP_ALL			0x0032
+
+//regular NRT-channels for CHB0
+#define SYS_PATH_NRT_CHB_IF_0_FRAME_NULL			0x0050
+#define SYS_PATH_NRT_CHB_IF_0_FRAME_LLDP			0x0051
+#define SYS_PATH_NRT_CHB_IF_0_FRAME_MRP				0x0052
+#define SYS_PATH_NRT_CHB_IF_0_FRAME_PTCP_SYNC		0x0053
+#define SYS_PATH_NRT_CHB_IF_0_FRAME_PTCP_DELAY		0x0054
+#define SYS_PATH_NRT_CHB_IF_0_FRAME_LEN_HSR			0x0055
+#define SYS_PATH_NRT_CHB_IF_0_FRAME_LEN_STDBY		0x0056
+
+//additional NRT-channels for CHB0
+#define SYS_PATH_NRT_CHB_IF_0_FRAME_OTHER			0x0070 //for negative test!
+#define SYS_PATH_NRT_CHB_IF_0_FRAME_PTCP_SYNC_DELAY	0x0071
+
+//PRM
+#define SYS_PATH_PRM								0x0090
+
+//general Path
+#define SYS_PATH_GENERAL							0x0091
+
+/*---------------------------------------------------------------------------*/
+/* for GSY_GET_PATH_INFO, variable path                                      */
+/*---------------------------------------------------------------------------*/
+
+#define SYS_PATH_SYNC								0x00F0
+#define SYS_PATH_ANNO								0x00F1
+
+#define SYS_PATH_GSY_USR_0							0x0100
+#define SYS_PATH_GSY_USR_1							0x0101
+
+#ifdef __cplusplus //If C++ - compiler: End of C linkage
+}
+#endif
+
+#endif //EDDI_INC_H
+
+
+/*****************************************************************************/
+/*  end of file eddi_inc.txt                                                 */
+/*****************************************************************************/

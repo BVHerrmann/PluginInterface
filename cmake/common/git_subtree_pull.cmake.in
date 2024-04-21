@@ -1,0 +1,15 @@
+find_package( Git )
+
+execute_process( COMMAND ${GIT_EXECUTABLE} subtree pull --prefix @PREFIX@ --squash @REMOTE@ master
+  RESULT_VARIABLE GIT_RESULT
+  OUTPUT_VARIABLE GIT_OUTPUT
+  ERROR_VARIABLE GIT_ERROR
+  OUTPUT_STRIP_TRAILING_WHITESPACE )
+
+if ( ${GIT_RESULT} EQUAL 0 )
+    # success
+    message( "${GIT_OUTPUT}" )
+else()
+    # error
+    message( FATAL_ERROR ${GIT_ERROR} )
+endif()

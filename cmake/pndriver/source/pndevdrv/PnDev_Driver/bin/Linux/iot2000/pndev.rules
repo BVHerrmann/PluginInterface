@@ -1,0 +1,4 @@
+# /etc/udev/rules.d/pndev.rules: Switch pci device driver for IX1000 device to PnDev_Driver at boot time.
+
+ACTION=="add", KERNEL=="0000:00:14.7", SUBSYSTEM=="pci", RUN+="/bin/sh -c 'echo 0000:00:14.7 > /sys/bus/pci/devices/0000:00:14.7/driver/unbind'"
+ACTION=="add", KERNEL=="0000:00:14.7", SUBSYSTEM=="pci", RUN+="/bin/sh -c 'modprobe PnDevDrv_32'"

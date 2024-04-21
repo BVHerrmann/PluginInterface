@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration xmlns="LTRCP"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="LTRCP platform:/base/configuration/TrcXmlInput.xsd">
+  <product name="pn_appl__default">
+  <override level="PNTRC_CFG_LEVEL_DEFAULT" instances="17" />
+
+    <buffer name="ADONIS" size="1">
+      <!--override instances="1" /-->
+      <subsystem ref="ADONIS_DRV" />
+      <subsystem ref="ADONIS_FMQ" />
+      <subsystem ref="ADONIS_FS" />
+      <subsystem ref="ADONIS_IPC" />
+      <subsystem ref="ADONIS_IRQ" />
+      <subsystem ref="ADONIS_MEMORY" />
+      <subsystem ref="ADONIS_MUTEX" />
+      <subsystem ref="ADONIS_PMQ" />
+      <subsystem ref="ADONIS_SELECT" />
+      <subsystem ref="ADONIS_SEM" />
+      <subsystem ref="ADONIS_SIGNAL" />
+      <subsystem ref="ADONIS_SPINLOCK" />
+      <subsystem ref="ADONIS_SYSTEM" />
+      <subsystem ref="ADONIS_DIAG" />
+      <subsystem ref="ADONIS_TIMER" />
+      <subsystem ref="ADONIS_ARCH" />
+      <subsystem ref="ADONIS_THREADS" />
+      <subsystem ref="ADONIS_ADB_STUB" />
+    </buffer>
+
+    <buffer name="ACP" size="1">
+      <subsystem ref="ACP_LOWER" />
+      <subsystem ref="ACP_MEM" />
+      <subsystem ref="ACP_RTA" />
+      <subsystem ref="ACP_UPPER" />
+    </buffer>
+
+    <buffer name="CLRPC" size="1">
+      <subsystem ref="CLRPC_UPPER" />
+      <subsystem ref="CLRPC_CL" />
+      <subsystem ref="CLRPC_CL_PKT" />
+      <subsystem ref="CLRPC_SV" />
+      <subsystem ref="CLRPC_SV_PKT" />
+      <subsystem ref="CLRPC_EPM" />
+      <subsystem ref="CLRPC_LOWER" />
+    </buffer>
+
+    <buffer name="CM" size="1">
+      <subsystem ref="CM_ACP" />
+      <subsystem ref="CM_AR" />
+      <subsystem ref="CM_CL" />
+      <subsystem ref="CM_EDD" />
+      <subsystem ref="CM_GSY" />
+      <subsystem ref="CM_MC" />
+      <subsystem ref="CM_MEM" />
+      <subsystem ref="CM_MRP" />
+      <subsystem ref="CM_NARE" />
+      <subsystem ref="CM_OHA" />
+      <subsystem ref="CM_PD" />
+      <subsystem ref="CM_POF" />
+      <subsystem ref="CM_RPC" />
+      <subsystem ref="CM_SV" />
+      <subsystem ref="CM_UPPER" />
+    </buffer>
+
+    <buffer name="DCP" size="1">
+      <subsystem ref="DCP_ERROR" />
+      <subsystem ref="DCP_FUNCTION" />
+      <subsystem ref="DCP_LOWER" />
+      <subsystem ref="DCP_SERVER" />
+      <subsystem ref="DCP_SNDRCV" />
+      <subsystem ref="DCP_SRVERR" />
+      <subsystem ref="DCP_SYSTEM" />
+      <subsystem ref="DCP_UPPER" />
+    </buffer>
+
+	<buffer name="DNS" size="1">
+      <subsystem ref="DNS_UPPER" />
+      <subsystem ref="DNS_LOWER" />
+      <subsystem ref="DNS_SYSTEM" />
+    </buffer>
+	
+    <buffer name="EDDI" size="1">
+	  <subsystem ref="EDDI_UPPER" />
+	  <subsystem ref="EDDI_LOWER" />
+	  <subsystem ref="EDDI_SYSTEM" />
+	  <subsystem ref="EDDI_FUNCTION" />
+	  <subsystem ref="EDDI_NRT" />
+	  <subsystem ref="EDDI_PRM" />
+	  <subsystem ref="EDDI_SWI" />
+	  <subsystem ref="EDDI_CRT" />
+	  <subsystem ref="EDDI_SYNC" />
+	  <subsystem ref="EDDI_PROGRAM" />
+    </buffer>
+
+    <buffer name="EDDL" size="1">
+      <subsystem ref="EDDL_UPPER" />
+      <subsystem ref="EDDL_LOWER" />
+      <subsystem ref="EDDL_SYSTEM" />
+      <subsystem ref="EDDL_PROGRAM" />
+      <subsystem ref="EDDL_CORE" />
+      <subsystem ref="EDDL_NRT" />
+      <subsystem ref="EDDL_CRT" />
+      <subsystem ref="EDDL_PHY" />
+      <subsystem ref="EDDL_SWI" />
+      <subsystem ref="EDDL_PRM" />
+      <subsystem ref="EDDL_CMD" />
+      <subsystem ref="EDDL_IOBUF" />
+      <subsystem ref="EDDL_USER" />
+    </buffer>
+
+    <buffer name="EDDP" size="1">
+      <subsystem ref="EDDP_UPPER" />
+      <subsystem ref="EDDP_LOWER" />
+      <subsystem ref="EDDP_SYSTEM" />
+      <subsystem ref="EDDP_PROGRAM" />
+      <subsystem ref="EDDP_CORE" />
+      <subsystem ref="EDDP_NRT" />
+      <subsystem ref="EDDP_CRT" />
+      <subsystem ref="EDDP_PHY" />
+      <subsystem ref="EDDP_K32" />
+      <subsystem ref="EDDP_K32_FW" />
+      <subsystem ref="EDDP_SWI" />
+      <subsystem ref="EDDP_PRM" />
+      <subsystem ref="EDDP_CMD" />
+      <subsystem ref="EDDP_USER" />
+      <subsystem ref="HERA_IO_SYSTEM" />
+    </buffer>
+
+    <buffer name="EDDS" size="1">
+      <subsystem ref="EDDS_UPPER" />
+      <subsystem ref="EDDS_LOWER" />
+      <subsystem ref="EDDS_SYSTEM" />
+      <subsystem ref="EDDS_FUNCTION" />
+      <subsystem ref="EDDS_PROGRAM" />
+      <subsystem ref="EDDS_NRT" />
+      <subsystem ref="EDDS_PRM" />
+      <subsystem ref="EDDS_SWI" />
+      <subsystem ref="EDDS_CORE" />
+      <subsystem ref="EDDS_CRT" />
+      <subsystem ref="EDDS_LL" />
+      <subsystem ref="EDDS_SCHED" />
+    </buffer>
+
+    <buffer name="EPS" size="1">
+      <subsystem ref="EPS_SYSTEM" />
+    </buffer>
+
+    <buffer name="GSY" size="1">
+      <subsystem ref="GSY_UPPER" />
+      <subsystem ref="GSY_LOWER" />
+      <subsystem ref="GSY_MEMORY" />
+      <subsystem ref="GSY_SYSTEM" />
+      <subsystem ref="GSY_PROTOCOL" />
+      <subsystem ref="GSY_FUNCTION" />
+      <subsystem ref="GSY_ERROR" />
+      <subsystem ref="GSY_MASTER" />
+      <subsystem ref="GSY_SYNC" />
+      <subsystem ref="GSY_DEL" />
+      <subsystem ref="GSY_FWD" />
+      <subsystem ref="GSY_SNDRCV" />
+      <subsystem ref="GSY_PRM" />
+      <subsystem ref="GSY_DIAG" />
+    </buffer>
+
+    <buffer name="HIF" size="1">
+      <subsystem ref="HIF_PROGRAM" />
+    </buffer>
+	
+    <buffer name="HSA" size="1">
+      <subsystem ref="HSA_SYSTEM" />
+	  <subsystem ref="HSA_UPPER" />
+	  <subsystem ref="HSA_LOWER" />
+	  <subsystem ref="HSA_TIMER" />
+    </buffer>
+
+    <buffer name="SOCKAPP" size="1">
+      <subsystem ref="SOCKAPP_SYSTEM" />
+	  <subsystem ref="SOCKAPP_UPPER" />
+	  <subsystem ref="SOCKAPP_LOWER" />
+	  <subsystem ref="SOCKAPP_TIMER" />
+    </buffer>
+
+    <buffer name="IOH" size="1">
+      <subsystem ref="IOH_UPPER" />
+      <subsystem ref="IOH_SYSTEM" />
+      <subsystem ref="IOH_FUNCTION" />
+    </buffer>
+
+    <buffer name="LLDP" size="1">
+      <subsystem ref="LLDP_FUNCTION" />
+      <subsystem ref="LLDP_LOWER" />
+      <subsystem ref="LLDP_PROGRAM" />
+      <subsystem ref="LLDP_SYSTEM" />
+      <subsystem ref="LLDP_UPPER" />
+    </buffer>
+
+    <buffer name="MRP" size="1">
+      <subsystem ref="MRP_UPPER" />
+      <subsystem ref="MRP_LOWER" />
+      <subsystem ref="MRP_SYSTEM" />
+      <subsystem ref="MRP_PROGRAM" />
+    </buffer>
+
+    <buffer name="NARE" size="1">
+      <subsystem ref="NARE_FUNCTION" />
+      <subsystem ref="NARE_LOWER" />
+      <subsystem ref="NARE_PROGRAM" />
+      <subsystem ref="NARE_SYSTEM" />
+      <subsystem ref="NARE_UPPER" />
+    </buffer>
+
+    <buffer name="OHA" size="1">
+      <subsystem ref="OHA_FUNCTION" />
+      <subsystem ref="OHA_LOWER" />
+      <subsystem ref="OHA_PROGRAM" />
+      <subsystem ref="OHA_SYSTEM" />
+      <subsystem ref="OHA_UPPER" />
+    </buffer>
+
+    <buffer name="PNTRC" size="1">
+      <subsystem ref="PNTRC_SYSTEM" />
+    </buffer>
+    
+    <buffer name="PNU" size="1">
+      <subsystem ref="PNU" />
+    </buffer>
+    
+    <buffer name="POF" size="1">
+      <subsystem ref="POF_FUNCTION" />
+      <subsystem ref="POF_LOWER" />
+      <subsystem ref="POF_PROGRAM" />
+      <subsystem ref="POF_SYSTEM" />
+      <subsystem ref="POF_UPPER" />
+    </buffer>
+
+    <buffer name="PSI" size="1">
+      <subsystem ref="PSI_SYSTEM" />
+      <subsystem ref="PSI_LD" />
+      <subsystem ref="PSI_HD" />
+    </buffer>
+
+    <buffer name="SNMPX" size="1">
+      <!--override instances="1" /-->
+      <subsystem ref="SNMPX_FUNCTION" />
+      <subsystem ref="SNMPX_PROTOCOL" />
+      <subsystem ref="SNMPX_MEMORY" />
+      <subsystem ref="SNMPX_LOWER" />
+      <subsystem ref="SNMPX_PROGRAM" />
+      <subsystem ref="SNMPX_SYSTEM" />
+      <subsystem ref="SNMPX_UPPER" />
+    </buffer>
+
+    <buffer name="SOCK" size="1">
+      <subsystem ref="SOCK_LOWER" />
+      <subsystem ref="SOCK_PROTOCOL" />
+      <subsystem ref="SOCK_SYSTEM" />
+      <subsystem ref="SOCK_UPPER" />
+    </buffer>
+
+    <buffer name="TCIP" size="1">
+      <subsystem ref="TCIP_UPPER" />
+      <subsystem ref="TCIP_MEM" />
+      <subsystem ref="TCIP_INICHE" />
+      <subsystem ref="TCIP_OBSD" />
+    </buffer>
+
+    <!--PN_APPL Subystems have to be below PN_RUN Subsystem and PN_RUN Subsystems above have to be same as in product__pn_run.trcxml /-->
+    <buffer name="PCIOX" size="1">
+      <subsystem ref="PCIOX_SYSTEM" />
+    </buffer>
+
+    <buffer name="PCIOX" size="1">
+      <subsystem ref="PCIOX_PD" />
+      <subsystem ref="PCIOX_IOC" />
+      <subsystem ref="PCIOX_IOD" />
+      <subsystem ref="PCIOX_IOM" />
+      <subsystem ref="PCIOX_IOS" />
+      <subsystem ref="PCIOX_IOH" />
+      <subsystem ref="PCIOX_OHA" />
+      <subsystem ref="PCIOX_SNMPX" />
+      <subsystem ref="PCIOX_WEB" />
+      <subsystem ref="PCIOX_SCRIPT" />
+      <subsystem ref="PCIOX_GUI" />
+      <subsystem ref="PCIOX_EDD" />
+      <subsystem ref="PCIOX_NARE" />
+      <subsystem ref="PCIOX_PNTRC" />
+      <subsystem ref="PCIOX_DNS" />
+      <subsystem ref="PCIOX_HSA" />
+      <subsystem ref="PCIOX_SOCKAPP" />
+    </buffer>
+	
+    <buffer name="PNTEST" size="1">
+      <subsystem ref="PNTEST_OSADAPT" />
+      <subsystem ref="PNTEST_PROG" />
+      <subsystem ref="PNTEST_TEST" />
+      <subsystem ref="PNTEST_TESTMGMT" />
+      <subsystem ref="PNTEST_USR" />
+    </buffer>
+
+    <buffer name="__IGNORE__" size="0">
+      <subsystem ref="ASH" />
+      <subsystem ref="ADONIS_ADB_SV_STUB" />
+      <subsystem ref="ADONIS_ADB_HOST" />
+    </buffer>
+
+  </product>
+</configuration>

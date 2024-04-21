@@ -1,0 +1,11 @@
+Benjamin Utz, 2016-02-03, Prevent unused Tasks from starting in EPS
+	- added "#define PSI_CFG_USE_HIF_LD 1" to all variants, so HIF is compiled and used between APP and LD.
+
+Mathias Hinkel, 2014-06-02, 1023234 pcIOX_NIF_Base_1_IF - Fatal error No_Sym
+	- added #define PSI_MAX_SV_IO_ARS maximum number of IO ARs for cyclical communication.
+	- changed #define PSI_MAX_SV_DEVICES (maximum aound of IOD / server instances) - 32 for SOC1, 1 for other use cases
+	- added #define IOH_CFG_MAX_PI_BUFFERS_IOC, IOH_CFG_MAX_PI_BUFFERS_IOD, IOH_CFG_MAX_CONSUMER_PI_BUFFERS (as a MAX of IOD and IOC)
+		IOH_CFG_MAX_CONSUMER_PI_BUFFERS and IOH_CFG_MAX_PROVIDER_PI_BUFFERS are set to value IOH_CFG_MAX_CONSUMER_PI_BUFFERS
+	- changed #define PSI_MAX_SV_AR (PSI_MAX_SV_IO_ARS + PSI_MAX_SV_READ_IMPL ) from constant values (was 16 + 10)
+	- reduced #define PSI_MAX_SV_DEVICES to 32 for SOC1 (UseCase IEPB Link) and 1 for the rest
+	- changed #definePSI_MAX_CL_DEVICES to 256 (SOC1, ERTEC400, EDDS) and 8 (ERTEC200, ERTEC200P)
