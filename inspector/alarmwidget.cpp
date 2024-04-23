@@ -1,6 +1,7 @@
 #include "alarmwidget.h"
 
 
+
 AlarmWidget::AlarmWidget(QSqlTableModel *model, QWidget *parent) :
     QWidget(parent)
 {
