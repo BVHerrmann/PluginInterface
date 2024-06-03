@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="56"
+   height="92"
+   viewBox="0 0 56 92"
+   fill="none"
+   stroke="currentColor"
+   stroke-width="2"
+   stroke-linecap="round"
+   stroke-linejoin="round"
+   class="feather feather-video-off"
+   version="1.1"
+   id="svg6"
+   sodipodi:docname="U+4C.svg"
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06">
+  <metadata
+     id="metadata12">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs10" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1337"
+     inkscape:window-height="705"
+     id="namedview8"
+     showgrid="false"
+     inkscape:zoom="2.5652174"
+     inkscape:cx="-25.40678"
+     inkscape:cy="46"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg6" />
+  <g
+     id="g3709"
+     transform="translate(-113.8204,52.820409)">
+    <path
+       style="stroke-width:4.66274214"
+       inkscape:connector-curvature="0"
+       d="M 151.14589,6.5050759 V 8.836447 a 4.6627421,4.6627421 0 0 1 -4.66274,4.662743 h -25.64508 a 4.6627421,4.6627421 0 0 1 -4.66274,-4.662743 v -23.31371 a 4.6627421,4.6627421 0 0 1 4.66274,-4.662742 h 4.66274 m 13.19556,0 h 7.78678 a 4.6627421,4.6627421 0 0 1 4.66274,4.662742 v 7.7867788 l 2.33137,2.3313711 13.98823,-10.1181499 v 23.31371"
+       id="path14" />
+    <line
+       style="stroke-width:4.66274214"
+       x1="116.17532"
+       y1="-28.46549"
+       x2="167.46548"
+       y2="22.824673"
+       id="line16" />
+  </g>
+</svg>
